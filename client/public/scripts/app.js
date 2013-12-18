@@ -1614,7 +1614,7 @@ module.exports = MapView = Backbone.View.extend({
 //		};
 		var that = this;
 		// $.getJSON('/geolocations', queryObject, function(data) {
-		$.getJSON('/geolocations', function(data) {
+		$.getJSON('geolocations', function(data) {
 			var geoData = new Array();
 			var googleLatLng = new Array(); 
 			$.each(data.geolocationLogs, function(key, val) {
