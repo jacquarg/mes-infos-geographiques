@@ -1,0 +1,65 @@
+//- menu
+div(class="navbar navbar-inverse navbar-fixed-top")
+  div(class="navbar-inner")
+    div(class="container")
+      a(class="btn btn-navbar",data-toggle="collapse",data-target=".nav-collapse")
+        span(class="icon-bar")
+        span(class="icon-bar")
+        span(class="icon-bar")
+      a(class="brand",href="#")  MesInfos Géographiques
+      div(class="nav-collapse collapse")
+        ul(class="nav")
+          li
+            a(href="#carte")  Cartes
+          li
+            a(href="#about")  A Propos
+          li
+            a(href="#contact")  Contact
+
+div(class="container")
+
+  //- into
+  div(class="hero-unit")
+    h2  MesInfos Géographiques
+    p
+      | Carte des lieux les plus fréquentés <br/>
+      | Permet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité
+    
+  //- carte & historique
+  div(id="carte",class="row")
+    div(class="span7")
+      h2  MesInfos Géographiques
+      p(class="text-info")  Carte des lieux fréquentés
+      div(id="heatmapArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
+      p  Cliquez sur la carte pour découvrir quand un lieu à été visité
+      a(href="#refreshButton",class="btn btn-primary btn-large")  Regénérer
+      
+    div(class="span5")
+      h2  Historique de visites
+      p(class="text-info")  Graphe de fréquentation du lieu selectionné.
+      div(id="historyArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
+      p  Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période
+      
+  //- about
+  div(id="about",class="row")
+    div(class="span9")
+      h2  A Propos
+      p  
+        | L'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>
+        | Il à pour objectif de permettre aux utilisateurs de visualiser la carte de ses déplacement.
+      p  
+        | Les données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>
+        | La précision des coordonnées est variable et la carte est uniquement indicative, et le fait d'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. 
+        | Cependant il indique que vous étiez pas loin. <br/>
+        
+  //- contact
+  div(id="contact",class="row")
+    div(class="span3")
+      h2  Contacts
+      p  Patrice Delorme <br/>
+        | @pdelorme<br/>
+        | pdelorme@lookal.fr
+        
+  // footer      
+  footer
+    p  &copy; Patrice Delorme 2013

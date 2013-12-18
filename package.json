@@ -1,0 +1,30 @@
+{
+  "name": "mes-infos-geographiques",
+  "version": "0.0.1",
+  "description": "Appli Mes-Info des déplacement basé sur les données Partenaires.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pdelorme/mes-infos-geographiques.git"
+  },
+  "main": "server.js",
+  "dependencies": {
+    "americano": "~0.2.10",
+    "americano-cozy": "~0.1.3",
+    "cozy-i18n-helper": "0.0.3",
+    "jade": "~0.35.0",
+    "request-json" : "~0.4.4",
+    "batch" :"~0.5.0"
+  },
+  "engines": [
+    "node = 0.8.x"
+  ],
+  "scripts": {
+    "start": "node server.js"
+  },
+  "cozy-displayName": "Mes Infos Géographiques",
+  "cozy-permissions": {
+    "GeolocationLog": {
+        "description": "Accéder a l'historique des déplacements Orange."
+    }
+  }
+}
