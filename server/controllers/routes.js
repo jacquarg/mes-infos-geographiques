@@ -8,8 +8,11 @@ module.exports = {
   'geolocations': {
       get: Services.all
   },
-  'bygeotile' : {
-	  get : Services.bygeotile
+  'areaGeolocations' : {
+	  get : Services.byArea
+  },
+  'byDateRange': {
+	  get : Services.byDateRange
   }
 };
 

@@ -22,9 +22,9 @@ GeolocationLog.all = function(callback) {
     );
 };
 
-GeolocationLog.dateRange = function(fromDate, toDate, callback) {
+GeolocationLog.byDateRange = function(fromDate, toDate, callback) {
 	GeolocationLog.request(
-        "byTimestamp", 
+        "bytimestamp", 
         {
         	startKey : fromDate,
         	endKey: toDate,
@@ -36,6 +36,22 @@ GeolocationLog.dateRange = function(fromDate, toDate, callback) {
         }
     );
 };
+
+GeolocationLog.byLatitudeRange = function(north, south, callback) {
+	GeolocationLog.request(
+        "bylatitude", 
+        {
+        	startKey : north,
+        	endKey: south,
+            descending: true
+
+        },
+        function(err, instances) {
+            callback(null, instances);
+        }
+    );
+};
+
 GeolocationLog.byGeoTile = function(geotile, callback) {
 	GeolocationLog.request(
         "bygeotile", 

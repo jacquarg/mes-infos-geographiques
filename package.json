@@ -23,8 +23,11 @@
   },
   "cozy-displayName": "Mes Infos Géographiques",
   "cozy-permissions": {
-    "GeolocationLog": {
+    "geolocationlog": {
         "description": "Accéder a l'historique des déplacements Orange."
+    },
+    "phonecommunicationlog": {
+        "description": "Accéder a l'historique des appels téléphonique Orange."
     }
   }
 }

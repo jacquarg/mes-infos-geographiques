@@ -12,6 +12,9 @@ module.exports = {
         },
         bygeotile: function(doc){
         	emit(""+new Number(doc.latitude).toFixed(2)+"-"+new Number(doc.longitude).toFixed(2), doc);
+        },
+        bylatitude: function(doc){
+        	emit(doc.latitude, doc);
         }
     },
     phonecommunicationlog: {
@@ -21,6 +24,9 @@ module.exports = {
         },
         bygeotile: function(doc){
         	emit(""+new Number(doc.latitude).toFixed(2)+"-"+new Number(doc.longitude).toFixed(2), doc);
+        },
+        bylatitude: function(doc){
+        	emit(doc.latitude, doc);
         }
     }
 };

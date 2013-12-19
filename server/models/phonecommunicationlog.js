@@ -6,11 +6,14 @@ module.exports = PhoneCommunicationLog = americano.getModel('phonecommunicationl
     'latitude': Number,
     'longitude': Number,
     'radius': Number,
-    'timestamp': Date
+    'timestamp': Date,
+    'type':String,
+    'direction':String,
+    'correspondantNumber': String
 });
 
 PhoneCommunicationLog.all = function(callback) {
-	GeolocationLog.request(
+	PhoneCommunicationLog.request(
         "bytimestamp", 
         {
             descending: true
@@ -23,8 +26,8 @@ PhoneCommunicationLog.all = function(callback) {
 };
 
 PhoneCommunicationLog.dateRange = function(fromDate, toDate, callback) {
-	GeolocationLog.request(
-        "byTimestamp", 
+	PhoneCommunicationLog.request(
+        "bytimestamp", 
         {
         	startKey : fromDate,
         	endKey: toDate,
@@ -36,8 +39,24 @@ PhoneCommunicationLog.dateRange = function(fromDate, toDate, callback) {
         }
     );
 };
+
+PhoneCommunicationLog.byLatitudeRange = function(north, south, callback) {
+	PhoneCommunicationLog.request(
+        "bylatitude", 
+        {
+        	startKey : north,
+        	endKey: south,
+            descending: true
+
+        },
+        function(err, instances) {
+            callback(null, instances);
+        }
+    );
+};
+
 PhoneCommunicationLog.byGeoTile = function(geotile, callback) {
-	GeolocationLog.request(
+	PhoneCommunicationLog.request(
         "bygeotile", 
         {
         	key : geotile,

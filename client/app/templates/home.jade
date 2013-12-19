@@ -10,7 +10,7 @@ div(class="navbar navbar-inverse navbar-fixed-top")
       div(class="nav-collapse collapse")
         ul(class="nav")
           li
-            a(href="#carte")  Cartes
+            a(href="#dataviz")  Cartes
           li
             a(href="#about")  A Propos
           li
@@ -26,7 +26,7 @@ div(class="container")
       | Permet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité
     
   //- carte & historique
-  div(id="carte",class="row")
+  div(id="dataviz",class="row")
     div(class="span7")
       h2  MesInfos Géographiques
       p(class="text-info")  Carte des lieux fréquentés
@@ -36,8 +36,8 @@ div(class="container")
       
     div(class="span5")
       h2  Historique de visites
-      p(class="text-info")  Graphe de fréquentation du lieu selectionné.
-      div(id="historyArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
+      p(class="text-info")  Graphe de fréquentation du lieu visible sur la carte.
+      div(id="chartArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
       p  Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période
       
   //- about

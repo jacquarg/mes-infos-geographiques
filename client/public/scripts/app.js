@@ -1502,7 +1502,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="navbar navbar-inverse navbar-fixed-top"><div class="navbar-inner"><div class="container"><a data-toggle="collapse" data-target=".nav-collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand"> MesInfos Géographiques</a><div class="nav-collapse collapse"><ul class="nav"><li><a href="#carte"> Cartes</a></li><li><a href="#about"> A Propos</a></li><li><a href="#contact"> Contact</a></li></ul></div></div></div></div><div class="container"><div class="hero-unit"><h2> MesInfos Géographiques</h2><p>Carte des lieux les plus fréquentés <br/>\nPermet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité</p></div><div id="carte" class="row"><div class="span7"><h2> MesInfos Géographiques</h2><p class="text-info"> Carte des lieux fréquentés</p><div id="heatmapArea" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div><p> Cliquez sur la carte pour découvrir quand un lieu à été visité</p><a href="#refreshButton" class="btn btn-primary btn-large"> Regénérer</a></div><div class="span5"><h2> Historique de visites</h2><p class="text-info"> Graphe de fréquentation du lieu selectionné.</p><div id="historyArea" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div><p> Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période</p></div></div><div id="about" class="row"><div class="span9"><h2> A Propos</h2><p> \nL\'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>\nIl à pour objectif de permettre aux utilisateurs de visualiser la carte de ses déplacement.</p><p> \nLes données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>\nLa précision des coordonnées est variable et la carte est uniquement indicative, et le fait d\'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. \nCependant il indique que vous étiez pas loin. <br/></p></div></div><div id="contact" class="row"><div class="span3"><h2> Contacts</h2><p> Patrice Delorme <br/>\n@pdelorme<br/>\npdelorme@lookal.fr</p></div></div><!-- footer      --><footer><p> &copy; Patrice Delorme 2013</p></footer></div>');
+buf.push('<div class="navbar navbar-inverse navbar-fixed-top"><div class="navbar-inner"><div class="container"><a data-toggle="collapse" data-target=".nav-collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand"> MesInfos Géographiques</a><div class="nav-collapse collapse"><ul class="nav"><li><a href="#dataviz"> Cartes</a></li><li><a href="#about"> A Propos</a></li><li><a href="#contact"> Contact</a></li></ul></div></div></div></div><div class="container"><div class="hero-unit"><h2> MesInfos Géographiques</h2><p>Carte des lieux les plus fréquentés <br/>\nPermet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité</p></div><div id="dataviz" class="row"><div class="span7"><h2> MesInfos Géographiques</h2><p class="text-info"> Carte des lieux fréquentés</p><div id="heatmapArea" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div><p> Cliquez sur la carte pour découvrir quand un lieu à été visité</p><a href="#refreshButton" class="btn btn-primary btn-large"> Regénérer</a></div><div class="span5"><h2> Historique de visites</h2><p class="text-info"> Graphe de fréquentation du lieu visible sur la carte.</p><div id="chartArea" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div><p> Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période</p></div></div><div id="about" class="row"><div class="span9"><h2> A Propos</h2><p> \nL\'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>\nIl à pour objectif de permettre aux utilisateurs de visualiser la carte de ses déplacement.</p><p> \nLes données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>\nLa précision des coordonnées est variable et la carte est uniquement indicative, et le fait d\'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. \nCependant il indique que vous étiez pas loin. <br/></p></div></div><div id="contact" class="row"><div class="span3"><h2> Contacts</h2><p> Patrice Delorme <br/>\n@pdelorme<br/>\npdelorme@lookal.fr</p></div></div><!-- footer      --><footer><p> &copy; Patrice Delorme 2013</p></footer></div>');
 }
 return buf.join("");
 };
@@ -1558,7 +1558,7 @@ var myLatlng = new google.maps.LatLng(43.293466, 5.364575);
 
 module.exports = MapView = Backbone.View.extend({
 
-    el: '#heatmapArea',
+    el: '#dataviz',
     
     events: {
         "click #refreshButton": "refreshView"
@@ -1578,7 +1578,7 @@ module.exports = MapView = Backbone.View.extend({
 		  scaleControl: true,
 		  disableDoubleClickZoom: false
 		};
-		this.map = new google.maps.Map(this.$el[0], this.options);
+		this.map = new google.maps.Map(this.$el.find("#heatmapArea")[0], this.options);
 		
 		this.heatmap = new HeatmapOverlay(this.map, {
 		    "radius":20,
@@ -1593,49 +1593,123 @@ module.exports = MapView = Backbone.View.extend({
 			that.updateMap(that.map);
 		});
 		google.maps.event.addListener(this.map, 'click', function(e) {
-			alert(e.latLng);
+			that.updateMap(that.map);
+			//alert(e.latLng);
 		});
 		google.maps.event.addListener(this.map, 'bounds_changed', function(e) {
-		    that.updateMap(that.map);
+			that.updateMap(that.map, function(){
+	    		that.updateChart(that.locationData);
+	    	});
+		});
+		
+		// init charts
+		this.geolocationChartData = [];
+		this.phoneCommunicationChartData = [];
+		var chartContainer = this.$el.find("#chartArea")[0];
+		this.chart = new CanvasJS.Chart(chartContainer,{
+			title:{
+				text: "History"
+			},
+			axisX:{
+			   labelAngle: 50,
+			   //valueFormatString: "D/M/Y",
+			},
+			zoomEnabled:true,
+			data : [
+					  {
+						  type: "spline",
+						  color: "rgba(54,158,173,.7)",
+						  dataPoints: this.geolocationChartData
+					  },
+					  {
+						  type: "spline",
+						  color: "rgba(12,25,73,.7)",
+						  dataPoints: this.phoneCommunicationChartData
+					  }
+					]
 		});
 	},
 
     render: function() {
+    	this.updateMap(this.map, function(){
+    		this.updateChart(this.locationData);
+    	});
     	
     },
 
-    updateMap: function (map){
+    updateMap: function (map, callback){
     	var bound = map.getBounds();
+		var queryObject = {
+				north: bound.getNorthEast().lat(),
+				south: bound.getSouthWest().lat(),
+				east : bound.getNorthEast().lng(),
+				west : bound.getSouthWest().lng(),
+		};
+		var that = this;
+		$.getJSON('areaGeolocations', queryObject, function(data) {
+			that.locationData = data;
+			var geoData = new Array();
+			var googleLatLng = new Array(); 
+			$.each(data.geolocationLogs, function(key, val) {
+				geoData.push({lng:val.longitude, lat:val.latitude, count:5});
+			});
+			$.each(data.phoneCommunicationLog, function(key, val) {
+				geoData.push({lng:val.longitude, lat:val.latitude, count:5});
+			});
+			console.log("nb points:",geoData.length);
+			
+			that.heatmap.setDataSet({max: 1, data: geoData});
+			if(callback)
+				callback();
+		});
+	},
+	
+	updateChart: function(data){
+//    	var bound = map.getBounds();
 //		var queryObject = {
 //				north: bound.getNorthEast().lat(),
 //				south: bound.getSouthWest().lat(),
 //				east : bound.getNorthEast().lng(),
 //				west : bound.getSouthWest().lng(),
 //		};
+//		$.getJSON('areaGeolocations', queryObject, function(data) {
+//			console.log("nb points:",data.geolocationLogs.length + data.phoneCommunicationLog.length);
+//		});
 		var that = this;
-		// $.getJSON('/geolocations', queryObject, function(data) {
-		$.getJSON('geolocations', function(data) {
-			var geoData = new Array();
-			var googleLatLng = new Array(); 
-			$.each(data.geolocationLogs, function(key, val) {
-				geoData.push({lng:val.longitude, lat:val.latitude, count:1});
-				googleLatLng.push(latLng = new google.maps.LatLng(val.latitude, val.longitude));
-			});
-			$.each(data.phoneCommunicationLog, function(key, val) {
-				geoData.push({lng:val.longitude, lat:val.latitude, count:1});
-				googleLatLng.push(latLng = new google.maps.LatLng(val.latitude, val.longitude));
-			});
-			console.log("nb points:",geoData.length);
-			// ajax implementation
+		var dayAccumulator = {};
+		$.each(data.geolocationLogs, function(key, val) {
+			var date = new Date(val.timestamp);
+			var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+			if(!dayAccumulator[day]){
+				dayAccumulator[day] = 1;
+			} else {
+				dayAccumulator[day] = dayAccumulator[day] + 1;
+			}
 			
-			that.heatmap.setDataSet({max: 1, data: geoData});
-		
-			// google implementation
-//					var gHeatmap = new google.maps.visualization.HeatmapLayer({
-//						  data: googleLatLng
-//						});
-//						gHeatmap.setMap(that.map);
 		});
+		this.geolocationChartData.length = 0;
+		dayAccumulator = this.toChartData(dayAccumulator,this.geolocationChartData);
+//		$.each(dayAccumulator, function(key, val){
+//			that.geolocationChartData.push({x:new Date(key), y:val});
+//		});
+		
+		var dayAccumulator = {};
+		$.each(data.phoneCommunicationLog, function(key, val) {
+			var date = new Date(val.timestamp);
+			var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+			if(!dayAccumulator[day]){
+				dayAccumulator[day] = 1;
+			} else {
+				dayAccumulator[day] = dayAccumulator[day] + 1;
+			}
+		});
+		
+		this.phoneCommunicationChartData.length = 0;
+		dayAccumulator = this.toChartData(dayAccumulator,this.phoneCommunicationChartData);
+//		$.each(dayAccumulator, function(key, val){
+//			that.phoneCommunicationChartData.push({x:new Date(key), y:val});
+//		});
+		this.chart.render();
 	},
         
 	placeMarker: function (position, map) {
@@ -1644,8 +1718,29 @@ module.exports = MapView = Backbone.View.extend({
 			map: map
 		});
 		map.panTo(position);
+	},
+	
+	toChartData: function (inputmap, output) {
+		output.length = 0;
+	  var keys=[];
+	  for(var k in inputmap) {
+		  keys.push(k);
+	  }
+	  keys.sort(function(a, b) {
+		    a = new Date(a);
+		    b = new Date(b);
+		    return a>b ? -1 : a<b ? 1 : 0;
+		});
+
+	  for(var i=0; i<keys.length; i++) {
+		  output.push({x: new Date(keys[i]), y : inputmap[""+keys[i]]});
+	  }
+	  output.length = keys.length;
+	  return output;
 	}
 });
+
+
 
 });
 
