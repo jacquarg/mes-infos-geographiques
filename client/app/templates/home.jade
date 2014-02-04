@@ -16,37 +16,41 @@ div(class="navbar navbar-inverse navbar-fixed-top")
           li
             a(href="#contact")  Contact
 
-div(class="container")
+div(id="content", class="container")
 
   //- into
-  div(class="hero-unit")
-    h2  MesInfos Géographiques
-    p
-      | Carte des lieux les plus fréquentés <br/>
-      | Permet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité
+  //div(class="hero-unit")
+  h2  MesInfos Géographiques
+  p
+    | Carte des lieux les plus fréquentés <br/>
+    | Permet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité
     
   //- carte & historique
-  div(id="dataviz",class="row")
-    div(class="span7")
-      h2  MesInfos Géographiques
-      p(class="text-info")  Carte des lieux fréquentés
-      div(id="googleHeatmapArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
-      //-p  Cliquez sur la carte pour découvrir quand un lieu à été visité
-      //-a(href="#refreshButton",class="btn btn-primary btn-large")  Regénérer
-    div(class="span5")
-      h2  Historique de visites
-      p(class="text-info")  Graphe de fréquentation du lieu visible sur la carte.
-      div(id="chartArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
-      //- p  Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période
-  div(id="dataviz",class="row")
-    div(class="span7")
-      h2  MesInfos Géographiques (Leaflet)
-      p(class="text-info")  Carte des lieux fréquentés
-      div(id="map",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
+  div(id="dataviz")
+    div(class="row")
+      div(class="span12")
+        h2  Carte des lieux fréquentés
+      div(class="span6")
+        p(class="text-info")  GoogleMap
+        div(id="googleHeatmapArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
+        //-p  Cliquez sur la carte pour découvrir quand un lieu à été visité
+        //-a(href="#refreshButton",class="btn btn-primary btn-large")  Regénérer
+      div(class="span6")
+        p(class="text-info")  OpenStreetMap (Leaflet)
+        div(id="map",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
+    div(class="row")
+      div(class="span12")
+        h2  Historique de visites
+      div(class="span8")
+        div(id="chartArea",class="well",style="padding:0;height:200px;cursor:pointer;position:relative;")
+        //- p  Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période
+      div(class="span4")
+        p Graphe de fréquentation du lieu visible sur la carte.
+        p  Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période
       
   //- about
   div(id="about",class="row")
-    div(class="span9")
+    div(class="span12")
       h2  A Propos
       p  
         | L'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>
