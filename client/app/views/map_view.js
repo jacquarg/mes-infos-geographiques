@@ -158,8 +158,9 @@ module.exports = MapView = Backbone.View.extend({
 	},
 	
     render: function() {
+    	var that = this;
     	this.updateGMap(function(){
-    		this.updateChart(this.locationData);
+    		that.updateChart(that.locationData);
     	});
     },
     
