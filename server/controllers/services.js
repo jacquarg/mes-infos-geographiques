@@ -75,28 +75,38 @@ module.exports.byArea = function(req, res) {
 	var south = req.query.south;
 	var east = req.query.east;
 	var west = req.query.west;
-	
+	console.log("geolocationlog : north,south,east,west :",north,south,east,west);
 	GeolocationLog.byLatitudeRange(north, south, function(err, geolocationLogData) {
 	    if(err != null) {
 	      res.send(500, "An error has occurred -- " + err);
 	    }
 	    else {
-	    	var filteredGeolocationLogData = [];
+	    	var filteredGeolocationLogData = new Array();
 	    	for(var i=0;i<geolocationLogData.length;i++){
 	    		longitude = geolocationLogData[i].longitude;
-	    		if(longitude < east && longitude > west)
+	    		latitude = geolocationLogData[i].latitude;
+	    		if(west < longitude && longitude < east && north > latitude && latitude > south){
+//	    			console.log("ok : lat:",latitude,"lon:",longitude);
 	    			filteredGeolocationLogData.push(geolocationLogData[i]);
+	    		} else {
+//	    			console.log("rejected : lat:",latitude,"lon:",longitude);
+	    		}
 	    	};
 	    	PhoneCommunicationLog.byLatitudeRange(north, south, function(err, phoneCommunicationLogData) {
 	    	    if(err != null) {
 	    	      res.send(500, "An error has occurred -- " + err);
 	    	    }
 	    	    else {
-	    	    	var filteredPhoneCommunicationLogData = [];
+	    	    	var filteredPhoneCommunicationLogData = new Array();
 	    	    	for(var i=0;i<phoneCommunicationLogData.length;i++){
 	    	    		longitude = phoneCommunicationLogData[i].longitude;
-	    	    		if(longitude < east && longitude > west)
+	    	    		latitude = phoneCommunicationLogData[i].latitude;
+	    	    		if(west < longitude && longitude < east && north > latitude && latitude > south) {
+//	    	    			console.log("ok :lat :",latitude,"lon:",longitude);
 	    	    			filteredPhoneCommunicationLogData.push(phoneCommunicationLogData[i]);
+	    	    		} else {
+//	    	    			console.log("rejected :lat :",latitude,"lon:",longitude);
+	    	    		}
 	    	    	}
 	    	    	
 	    	    	data = {"geolocationLogs": filteredGeolocationLogData,

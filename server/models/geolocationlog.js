@@ -44,7 +44,6 @@ GeolocationLog.byLatitudeRange = function(north, south, callback) {
         	startKey : north,
         	endKey: south,
             descending: true
-
         },
         function(err, instances) {
             callback(null, instances);

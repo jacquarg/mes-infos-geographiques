@@ -1502,7 +1502,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="navbar navbar-inverse navbar-fixed-top"><div class="navbar-inner"><div class="container"><a data-toggle="collapse" data-target=".nav-collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand"> MesInfos Géographiques</a><div class="nav-collapse collapse"><ul class="nav"><li><a href="#dataviz"> Cartes</a></li><li><a href="#about"> A Propos</a></li><li><a href="#contact"> Contact</a></li></ul></div></div></div></div><div class="container"><div class="hero-unit"><h2> MesInfos Géographiques</h2><p>Carte des lieux les plus fréquentés <br/>\nPermet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité</p></div><div id="dataviz" class="row"><div class="span7"><h2> MesInfos Géographiques</h2><p class="text-info"> Carte des lieux fréquentés sur la période selectionnée</p><div id="heatmapArea" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div><div class="span5"><h2> Historique de visites</h2><p class="text-info"> Graphe de fréquentation du lieu visible sur la carte.</p><div id="chartArea" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div></div><div id="about" class="row"><div class="span9"><h2> A Propos</h2><p> \nL\'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>\nIl à pour objectif de permettre aux utilisateurs de visualiser la carte de ses déplacement.</p><p> \nLes données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>\nLa précision des coordonnées est variable et la carte est uniquement indicative, et le fait d\'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. \nCependant il indique que vous étiez pas loin. <br/></p></div></div><div id="contact" class="row"><div class="span3"><h2> Contacts</h2><p> Patrice Delorme <br/>\n@pdelorme<br/>\npdelorme@lookal.fr</p></div></div><!-- footer      --><footer><p> &copy; Patrice Delorme 2013</p></footer></div>');
+buf.push('<div class="navbar navbar-inverse navbar-fixed-top"><div class="navbar-inner"><div class="container"><a data-toggle="collapse" data-target=".nav-collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand"> MesInfos Géographiques</a><div class="nav-collapse collapse"><ul class="nav"><li><a href="#dataviz"> Cartes</a></li><li><a href="#about"> A Propos</a></li><li><a href="#contact"> Contact</a></li></ul></div></div></div></div><div class="container"><div class="hero-unit"><h2> MesInfos Géographiques</h2><p>Carte des lieux les plus fréquentés <br/>\nPermet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité</p></div><div id="dataviz" class="row"><div class="span7"><h2> MesInfos Géographiques</h2><p class="text-info"> Carte des lieux fréquentés</p><div id="googleHeatmapArea" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div><div class="span5"><h2> Historique de visites</h2><p class="text-info"> Graphe de fréquentation du lieu visible sur la carte.</p><div id="chartArea" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div></div><div id="dataviz" class="row"><div class="span7"><h2> MesInfos Géographiques (Leaflet)</h2><p class="text-info"> Carte des lieux fréquentés</p><div id="map" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div></div><div id="about" class="row"><div class="span9"><h2> A Propos</h2><p> \nL\'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>\nIl à pour objectif de permettre aux utilisateurs de visualiser la carte de ses déplacement.</p><p> \nLes données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>\nLa précision des coordonnées est variable et la carte est uniquement indicative, et le fait d\'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. \nCependant il indique que vous étiez pas loin. <br/></p></div></div><div id="contact" class="row"><div class="span3"><h2> Contacts</h2><p> Patrice Delorme <br/>\n@pdelorme<br/>\npdelorme@lookal.fr</p></div></div><!-- footer      --><footer><p> &copy; Patrice Delorme 2013</p></footer></div>');
 }
 return buf.join("");
 };
@@ -1566,8 +1566,34 @@ module.exports = MapView = Backbone.View.extend({
     
     // initialize is automatically called once after the view is constructed
     initialize: function() {
-    	this.options = {
-		  zoom: 8,
+    	this.initGoogleMap();
+		this.initLeafletMap();
+		this.initChart();
+		
+		// centre la carte sur l'utilisateur.
+    	var that = this;
+    	navigator.geolocation.getCurrentPosition(
+			function(location){
+	    		that.latitude = location.coords.latitude;
+	    		that.longitude = location.coords.longitude;
+	    		that.gotoLocation(that.longitude,that.latitude);
+	    	}
+		);
+		
+	},
+
+	gotoLocation: function (longitude, latitude){
+		if(this.lmap){
+			this.lmap.setView([latitude,longitude]);
+			this.updateLMap();
+		}
+		if(this.gmap){
+			this.gmap.center = new google.maps.LatLng(latitude, longitude);
+		}
+	},
+	initGoogleMap: function(){
+		this.options = {
+		  zoom: 5,
 		  center: myLatlng,
 		  mapTypeId: google.maps.MapTypeId.ROADMAP,
 		  disableDefaultUI: false,
@@ -1578,9 +1604,9 @@ module.exports = MapView = Backbone.View.extend({
 		  scaleControl: true,
 		  disableDoubleClickZoom: false
 		};
-		this.map = new google.maps.Map(this.$el.find("#heatmapArea")[0], this.options);
+		this.gmap = new google.maps.Map(this.$el.find("#googleHeatmapArea")[0], this.options);
 		
-		this.heatmap = new HeatmapOverlay(this.map, {
+		this.gheatmap = new HeatmapOverlay(this.gmap, {
 		    "radius":20,
 		    "visible":true, 
 		    "opacity":60
@@ -1589,103 +1615,207 @@ module.exports = MapView = Backbone.View.extend({
 
 		// this is important, because if you set the data set too early, the latlng/pixel projection doesn't work
 		var that = this;
-		google.maps.event.addListenerOnce(this.map, "idle", function(){
-			that.updateMap(that.map);
+		google.maps.event.addListenerOnce(this.gmap, "idle", function(){
+			that.updateGMap();
 		});
-		google.maps.event.addListener(this.map, 'click', function(e) {
-			that.updateMap(that.map);
+		google.maps.event.addListener(this.gmap, 'click', function(e) {
+			that.updateGMap();
 			//alert(e.latLng);
 		});
-		google.maps.event.addListener(this.map, 'bounds_changed', function(e) {
-			that.updateMap(that.map, function(){
+		google.maps.event.addListener(this.gmap, 'bounds_changed', function(e) {
+			that.updateGMap(function(){
 	    		that.updateChart(that.locationData);
 	    	});
 		});
-		
+	},
+	
+	initChart:function(){
 		// init charts
 		this.geolocationChartData = [];
 		this.phoneCommunicationChartData = [];
 		var chartContainer = this.$el.find("#chartArea")[0];
+		var that = this;
 		this.chart = new CanvasJS.Chart(chartContainer,{
 			title:{
-				text: "History"
+				text: "History",
+				fontSize:15,
+				fontFamily:"arial",
+				fontWeight:"normal",
 			},
 			axisX:{
-			   labelAngle: 50,
-			   //valueFormatString: "D/M/Y",
+			   //labelAngle: 50,
+			   valueFormatString: "D/M/Y",
+			   labelFontFamily:"arial",
+			   labelFontSize:12,
+			   lineThickness:0,
+			   gridThickness:0,
+			   tickThickness:0,
+			   interval:1,
+			   intervalType:"week"
+			},
+			axisY:{
+				//title:"Kilo Joules : Grammes",
+				valueFormatString: "0.##",
+				labelFontSize:1,
+				//labelFontColor:000,
+				lineThickness:0,
+				gridThickness:0,
+				tickThickness:0,
+				minimum:0,
+				interval:10
 			},
 			zoomEnabled:true,
 			data : [
 					  {
-						  type: "spline",
-						  color: "rgba(54,158,173,.7)",
-						  dataPoints: this.geolocationChartData
+						  type: "line",
+						  color: "rgba(54,158,173,.3)",
+						  dataPoints: this.geolocationChartData,
+						  mouseover: function(e){
+							  console.log("geo");
+					        that.showDayLocations(e.dataPoint.x);
+					      },
+					      mouseout: function(e){
+						        that.updateMap();
+						  },
 					  },
 					  {
-						  type: "spline",
-						  color: "rgba(12,25,73,.7)",
-						  dataPoints: this.phoneCommunicationChartData
+						  type: "line",
+						  color: "rgba(8,15,173,.7)",
+						  dataPoints: this.phoneCommunicationChartData,
+						  mouseover: function(e){
+							  console.log("phone");
+							  that.showDayLocations(e.dataPoint.x);
+						  },
+						  mouseout: function(e){
+						      that.updateMap();
+						  },
 					  }
 					]
 		});
 	},
 
+	initLeafletMap: function(){
+		this.lmap = L.map('map').setView([43.2957, 5.3738], 6);
+
+		var tiles = L.tileLayer('http://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+		    attribution: '<a href="https://www.mapbox.com/about/maps/">Terms and Feedback</a>',
+		    id: 'examples.map-20v6611k'
+		}).addTo(this.lmap);
+
+		var that = this;
+		this.lmap.on("moveend", function(){
+			that.updateLMap(function(){
+	    		that.updateChart(that.locationData);
+	    	})
+		});
+		
+		this.lheatmap = L.heatLayer(addressPoints).addTo(this.lmap);
+	},
+	
     render: function() {
-    	this.updateMap(this.map, function(){
+    	this.updateGMap(function(){
     		this.updateChart(this.locationData);
     	});
-    	
     },
-
-    updateMap: function (map, callback){
-    	var bound = map.getBounds();
+    
+    showDayLocations: function (day){
+    	var dayLData = this.dayLLocations[day];
+    	this.lheatmap.setLatLngs(dayLData);
+    	var dayGData = this.dayGLocations[day];
+    	this.gheatmap.setDataSet({max: 5, data: dayGData});
+    },
+    updateMap: function(callback){
+    	this.lheatmap.setLatLngs(this.geoLData,{max: 5});
+    	this.gheatmap.setDataSet({data: this.geoGData, max: 5});
+    },
+    
+    updateLMap:function(callback){
+    	var bound = this.lmap.getBounds();
+    	if(!bound)
+    		return;
+    	var queryObject = {
+			north: bound.getNorth(),
+			south: bound.getSouth(),
+			east : bound.getEast(),
+			west : bound.getWest()
+		};
+    	//console.log("south,north,west,east:",queryObject.south,queryObject.north,queryObject.west,queryObject.east);
+		var that = this;
+		this.fetchData(queryObject,function(){
+			that.lheatmap.setLatLngs(that.geoLData,{max: 5});
+			if(callback)
+				callback();
+		});
+    },
+    
+    updateGMap: function (callback){
+    	var bound = this.gmap.getBounds();
+    	if(!bound)
+    		return;
 		var queryObject = {
 				north: bound.getNorthEast().lat(),
 				south: bound.getSouthWest().lat(),
 				east : bound.getNorthEast().lng(),
 				west : bound.getSouthWest().lng(),
 		};
+//		console.log("south,north,west,east:",queryObject.south,queryObject.north,queryObject.west,queryObject.east);
 		var that = this;
-		$.getJSON('areaGeolocations', queryObject, function(data) {
+		this.fetchData(queryObject,function(){
+			that.gheatmap.setDataSet({max: 5, data: that.geoGData});
+			if(callback)
+				callback();
+		});
+	},
+	fetchData:function(bounds,callback){
+		var that = this;
+		$.getJSON('areaGeolocations', bounds, function(data) {
 			that.locationData = data;
-			var geoData = new Array();
-			var googleLatLng = new Array(); 
+			that.geoGData = new Array();
+			that.geoLData = new Array();
+//			var north = -1000;
+//			var south = 1000;
+//			var east = -1000;
+//			var west = 1000;
 			$.each(data.geolocationLogs, function(key, val) {
-				geoData.push({lng:val.longitude, lat:val.latitude, count:5});
+				that.geoGData.push({lng:val.longitude, lat:val.latitude, count:1});
+				that.geoLData.push([val.latitude, val.longitude, 1]);
+//				if(val.longitude<west) west = val.longitude;
+//				if(val.longitude>east) east = val.longitude;
+//				if(val.latitude>north) north = val.latitude;
+//				if(val.latitude<south) south = val.latitude;
 			});
 			$.each(data.phoneCommunicationLog, function(key, val) {
-				geoData.push({lng:val.longitude, lat:val.latitude, count:5});
+				that.geoGData.push({lng:val.longitude, lat:val.latitude, count:1});
+				that.geoLData.push([val.latitude, val.longitude, 1]);
+//				if(val.longitude<west) west = val.longitude;
+//				if(val.longitude>east) east = val.longitude;
+//				if(val.latitude>north) north = val.latitude;
+//				if(val.latitude<south) south = val.latitude;
 			});
-			console.log("nb points:",geoData.length);
-			
-			that.heatmap.setDataSet({max: 1, data: geoData});
+			console.log("nb points:",that.geoGData.length);
+//			console.log("result south,north,west,east:",south,north,west,east);
 			if(callback)
 				callback();
 		});
 	},
 	
 	updateChart: function(data){
-//    	var bound = map.getBounds();
-//		var queryObject = {
-//				north: bound.getNorthEast().lat(),
-//				south: bound.getSouthWest().lat(),
-//				east : bound.getNorthEast().lng(),
-//				west : bound.getSouthWest().lng(),
-//		};
-//		$.getJSON('areaGeolocations', queryObject, function(data) {
-//			console.log("nb points:",data.geolocationLogs.length + data.phoneCommunicationLog.length);
-//		});
 		var that = this;
 		var dayAccumulator = {};
+		this.dayLLocations = {};
+		this.dayGLocations = {};
 		$.each(data.geolocationLogs, function(key, val) {
 			var date = new Date(val.timestamp);
 			var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 			if(!dayAccumulator[day]){
 				dayAccumulator[day] = 1;
+				that.dayLLocations[day] = new Array();
+				that.dayGLocations[day] = new Array();
 			} else {
 				dayAccumulator[day] = dayAccumulator[day] + 1;
 			}
-			
+			that.dayLLocations[day].push([val.latitude,val.longitude]);
+			that.dayGLocations[day].push({lat:val.latitude,lng:val.longitude, count:1});
 		});
 		this.geolocationChartData.length = 0;
 		dayAccumulator = this.toChartData(dayAccumulator,this.geolocationChartData);
@@ -1699,9 +1829,13 @@ module.exports = MapView = Backbone.View.extend({
 			var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 			if(!dayAccumulator[day]){
 				dayAccumulator[day] = 1;
+				that.dayLLocations[day] = new Array();
+				that.dayGLocations[day] = new Array();
 			} else {
 				dayAccumulator[day] = dayAccumulator[day] + 1;
 			}
+			that.dayLLocations[day].push([val.latitude,val.longitude]);
+			that.dayGLocations[day].push({lat:val.latitude,lng:val.longitude, count:1});
 		});
 		
 		this.phoneCommunicationChartData.length = 0;
@@ -1712,12 +1846,12 @@ module.exports = MapView = Backbone.View.extend({
 		this.chart.render();
 	},
         
-	placeMarker: function (position, map) {
+	placeMarker: function (position, gmap) {
 		var marker = new google.maps.Marker({
 			position: position,
-			map: map
+			map: gmap
 		});
-		map.panTo(position);
+		gmap.panTo(position);
 	},
 	
 	toChartData: function (inputmap, output) {

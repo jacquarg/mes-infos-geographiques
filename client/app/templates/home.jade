@@ -29,16 +29,20 @@ div(class="container")
   div(id="dataviz",class="row")
     div(class="span7")
       h2  MesInfos Géographiques
-      p(class="text-info")  Carte des lieux fréquentés sur la période selectionnée
-      div(id="heatmapArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
+      p(class="text-info")  Carte des lieux fréquentés
+      div(id="googleHeatmapArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
       //-p  Cliquez sur la carte pour découvrir quand un lieu à été visité
       //-a(href="#refreshButton",class="btn btn-primary btn-large")  Regénérer
-      
     div(class="span5")
       h2  Historique de visites
       p(class="text-info")  Graphe de fréquentation du lieu visible sur la carte.
       div(id="chartArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
       //- p  Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période
+  div(id="dataviz",class="row")
+    div(class="span7")
+      h2  MesInfos Géographiques (Leaflet)
+      p(class="text-info")  Carte des lieux fréquentés
+      div(id="map",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
       
   //- about
   div(id="about",class="row")
