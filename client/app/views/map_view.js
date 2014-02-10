@@ -151,10 +151,10 @@ module.exports = MapView = Backbone.View.extend({
 		this.lmap.on("moveend", function(){
 			that.updateLMap(function(){
 	    		that.updateChart(that.locationData);
-	    	})
+	    	});
 		});
-		
-		this.lheatmap = L.heatLayer(addressPoints).addTo(this.lmap);
+		var dummy= new Array();
+		this.lheatmap = L.heatLayer(dummy).addTo(this.lmap);
 	},
 	
     render: function() {
