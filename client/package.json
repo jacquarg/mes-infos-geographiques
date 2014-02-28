@@ -1,8 +1,8 @@
 {
   "author": "Patrice Delorme",
-  "name": "mes-infos-nutritionnelles-ui",
-  "description": "Le Client de l'appli mes-infos-nutritionelles",
-  "version": "0.1.0",
+  "name": "mes-infos-géographiques-ui",
+  "description": "Le Client de l'appli mes-infos-géographiques",
+  "version": "0.1.1",
   "homepage": "",
   "repository": {
     "type": "git",

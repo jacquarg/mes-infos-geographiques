@@ -155,9 +155,10 @@ module.exports = MapView = Backbone.View.extend({
 		});
 		var dummy = new Array();
 		var options = {
-		    max:10,
-		    radius:25,
-		    blur:5
+		    //max:1,
+		    radius:10,
+		    //blur:5,
+		    maxZoom:8
 		}
 		this.lheatmap = L.heatLayer(dummy,options).addTo(this.lmap);
 	},
