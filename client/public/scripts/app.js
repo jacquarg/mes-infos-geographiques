@@ -1502,7 +1502,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="navbar navbar-inverse navbar-fixed-top"><div class="navbar-inner"><div class="container"><a data-toggle="collapse" data-target=".nav-collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand"> MesInfos Géographiques</a><div class="nav-collapse collapse"><ul class="nav"><li><a href="#dataviz"> Cartes</a></li><li><a href="#about"> A Propos</a></li><li><a href="#contact"> Contact</a></li></ul></div></div></div></div><div id="content" class="container"><!--div(class="hero-unit")--><h2> MesInfos Géographiques</h2><p>Carte des lieux les plus fréquentés <br/>\nPermet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité</p><div id="dataviz"><div class="row"><div class="span12"><h2> Carte des lieux fréquentés</h2></div><div class="span6"><p class="text-info"> GoogleMap</p><div id="googleHeatmapArea" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div><div class="span6"><p class="text-info"> OpenStreetMap (Leaflet)</p><div id="map" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div></div><div class="row"><div class="span12"><h2> Historique de visites</h2></div><div class="span8"><div id="chartArea" style="padding:0;height:200px;cursor:pointer;position:relative;" class="well"></div></div><div class="span4"><p>Graphe de fréquentation du lieu visible sur la carte.</p><p> Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période</p></div></div></div><div id="about" class="row"><div class="span12"><h2> A Propos</h2><p> \nL\'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>\nIl à pour objectif de permettre aux utilisateurs de visualiser la carte de ses déplacement.</p><p> \nLes données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>\nLa précision des coordonnées est variable et la carte est uniquement indicative, et le fait d\'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. \nCependant il indique que vous étiez pas loin. <br/></p></div></div><div id="contact" class="row"><div class="span3"><h2> Contacts</h2><p> Patrice Delorme <br/>\n@pdelorme<br/>\npdelorme@lookal.fr</p></div></div><!-- footer      --><footer><p> &copy; Patrice Delorme 2013</p></footer></div>');
+buf.push('<div class="navbar navbar-inverse navbar-fixed-top"><div class="navbar-inner"><div class="container"><a data-toggle="collapse" data-target=".nav-collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand"> MesInfos Géographiques</a><div class="nav-collapse collapse"><ul class="nav"><li><a href="#dataviz"> Cartes</a></li><li><a href="#about"> A Propos</a></li><li><a href="#contact"> Contact</a></li></ul></div></div></div></div><div id="content" class="container"><!--div(class="hero-unit")--><h2> MesInfos Géographiques</h2><p>Cette application vous permet de naviguer visuellement dans votre historique des lieux que vous avez les plus fréquentés.<br/></p><div id="dataviz"><div class="row"><div class="span12"><h2> Carte des lieux fréquentés</h2></div><div class="span4"><p> \nLa carte ci contre indique votre fréquentation géographique en se basant sur l\'historique de positionnement de votre téléphone.<br>\nVous pouvez vous déplacer et zoomer sur une zone pour plus de précision.<br>\nLe graphe de fréquentation ci-desous indique les dates et intensité de votre présence sur la zone visible de la carte.</p></div><div class="span8"><!--p(class="text-info")  OpenStreetMap (Leaflet)--><div id="map" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div></div><div class="row"><div class="span12"><h2> Graphe de fréquentation</h2></div><div class="span8"><div id="chartArea" style="padding:0;height:200px;cursor:pointer;position:relative;" class="well"></div></div><div class="span4"><p>ce graphe indique les dates et intensité de votre présence sur la zone visible de la carte</p><p>En pointant les points de ce graphe, la carte ci-dessus est mise à jour avec les lieux fréquentés à la date pointé.</p></div></div></div><div id="about" class="row"><div class="span12"><h2> A Propos</h2><p> \nL\'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>\nIl à pour objectif de permettre aux utilisateurs de visualiser la carte de ses déplacement.</p><p> \nLes données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>\nLa précision des coordonnées est variable et la carte est uniquement indicative, et le fait d\'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. \nCependant il indique que vous étiez pas loin. <br/></p></div></div><div id="contact" class="row"><div class="span3"><h2> Contacts</h2><p> Patrice Delorme <br/>\n@pdelorme<br/>\npdelorme@lookal.fr</p></div></div><!-- footer      --><footer><p> &copy; Patrice Delorme 2013</p></footer></div>');
 }
 return buf.join("");
 };
@@ -1566,7 +1566,7 @@ module.exports = MapView = Backbone.View.extend({
     
     // initialize is automatically called once after the view is constructed
     initialize: function() {
-    	this.initGoogleMap();
+    	// this.initGoogleMap();
 		this.initLeafletMap();
 		this.initChart();
 		
@@ -1708,8 +1708,13 @@ module.exports = MapView = Backbone.View.extend({
 	    		that.updateChart(that.locationData);
 	    	});
 		});
-		var dummy= new Array();
-		this.lheatmap = L.heatLayer(dummy).addTo(this.lmap);
+		var dummy = new Array();
+		var options = {
+		    max:10,
+		    radius:25,
+		    blur:5
+		}
+		this.lheatmap = L.heatLayer(dummy,options).addTo(this.lmap);
 	},
 	
     render: function() {
@@ -1722,12 +1727,16 @@ module.exports = MapView = Backbone.View.extend({
     showDayLocations: function (day){
     	var dayLData = this.dayLLocations[day];
     	this.lheatmap.setLatLngs(dayLData);
-    	var dayGData = this.dayGLocations[day];
-    	this.gheatmap.setDataSet({max: 5, data: dayGData});
+    	if(this.gmap){
+    	  var dayGData = this.dayGLocations[day];
+    	  this.gheatmap.setDataSet({max: 5, data: dayGData});
+    	}
     },
     updateMap: function(callback){
-    	this.lheatmap.setLatLngs(this.geoLData,{max: 5});
-    	this.gheatmap.setDataSet({data: this.geoGData, max: 5});
+    	this.lheatmap.setLatLngs(this.geoLData);
+    	if(this.gmap){
+    	  this.gheatmap.setDataSet({data: this.geoGData, max: 5});
+    	}
     },
     
     updateLMap:function(callback){
@@ -1743,7 +1752,7 @@ module.exports = MapView = Backbone.View.extend({
     	//console.log("south,north,west,east:",queryObject.south,queryObject.north,queryObject.west,queryObject.east);
 		var that = this;
 		this.fetchData(queryObject,function(){
-			that.lheatmap.setLatLngs(that.geoLData,{max: 5});
+			that.lheatmap.setLatLngs(that.geoLData);
 			if(callback)
 				callback();
 		});

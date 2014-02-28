@@ -11,7 +11,7 @@ module.exports = MapView = Backbone.View.extend({
     
     // initialize is automatically called once after the view is constructed
     initialize: function() {
-    	this.initGoogleMap();
+    	// this.initGoogleMap();
 		this.initLeafletMap();
 		this.initChart();
 		
@@ -153,8 +153,13 @@ module.exports = MapView = Backbone.View.extend({
 	    		that.updateChart(that.locationData);
 	    	});
 		});
-		var dummy= new Array();
-		this.lheatmap = L.heatLayer(dummy).addTo(this.lmap);
+		var dummy = new Array();
+		var options = {
+		    max:10,
+		    radius:25,
+		    blur:5
+		}
+		this.lheatmap = L.heatLayer(dummy,options).addTo(this.lmap);
 	},
 	
     render: function() {
@@ -167,12 +172,16 @@ module.exports = MapView = Backbone.View.extend({
     showDayLocations: function (day){
     	var dayLData = this.dayLLocations[day];
     	this.lheatmap.setLatLngs(dayLData);
-    	var dayGData = this.dayGLocations[day];
-    	this.gheatmap.setDataSet({max: 5, data: dayGData});
+    	if(this.gmap){
+    	  var dayGData = this.dayGLocations[day];
+    	  this.gheatmap.setDataSet({max: 5, data: dayGData});
+    	}
     },
     updateMap: function(callback){
-    	this.lheatmap.setLatLngs(this.geoLData,{max: 5});
-    	this.gheatmap.setDataSet({data: this.geoGData, max: 5});
+    	this.lheatmap.setLatLngs(this.geoLData);
+    	if(this.gmap){
+    	  this.gheatmap.setDataSet({data: this.geoGData, max: 5});
+    	}
     },
     
     updateLMap:function(callback){
@@ -188,7 +197,7 @@ module.exports = MapView = Backbone.View.extend({
     	//console.log("south,north,west,east:",queryObject.south,queryObject.north,queryObject.west,queryObject.east);
 		var that = this;
 		this.fetchData(queryObject,function(){
-			that.lheatmap.setLatLngs(that.geoLData,{max: 5});
+			that.lheatmap.setLatLngs(that.geoLData);
 			if(callback)
 				callback();
 		});

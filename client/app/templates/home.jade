@@ -22,31 +22,35 @@ div(id="content", class="container")
   //div(class="hero-unit")
   h2  MesInfos Géographiques
   p
-    | Carte des lieux les plus fréquentés <br/>
-    | Permet de voir les lieux les plus fréquentés ainsi que de retrouver quand un lieux à été visité
+    | Cette application vous permet de naviguer visuellement dans votre historique des lieux que vous avez les plus fréquentés.<br/>
     
   //- carte & historique
   div(id="dataviz")
     div(class="row")
       div(class="span12")
         h2  Carte des lieux fréquentés
-      div(class="span6")
-        p(class="text-info")  GoogleMap
-        div(id="googleHeatmapArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
+      div(class="span4")
+        //-p(class="text-info")  GoogleMap
+        //-div(id="googleHeatmapArea",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
         //-p  Cliquez sur la carte pour découvrir quand un lieu à été visité
         //-a(href="#refreshButton",class="btn btn-primary btn-large")  Regénérer
-      div(class="span6")
-        p(class="text-info")  OpenStreetMap (Leaflet)
+        p 
+          | La carte ci contre indique votre fréquentation géographique en se basant sur l'historique de positionnement de votre téléphone.<br>
+          | Vous pouvez vous déplacer et zoomer sur une zone pour plus de précision.<br>
+          | Le graphe de fréquentation ci-desous indique les dates et intensité de votre présence sur la zone visible de la carte.
+          
+      div(class="span8")
+        //p(class="text-info")  OpenStreetMap (Leaflet)
         div(id="map",class="well",style="padding:0;height:400px;cursor:pointer;position:relative;")
     div(class="row")
       div(class="span12")
-        h2  Historique de visites
+        h2  Graphe de fréquentation
       div(class="span8")
         div(id="chartArea",class="well",style="padding:0;height:200px;cursor:pointer;position:relative;")
         //- p  Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période
       div(class="span4")
-        p Graphe de fréquentation du lieu visible sur la carte.
-        p  Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période
+        p ce graphe indique les dates et intensité de votre présence sur la zone visible de la carte
+        p En pointant les points de ce graphe, la carte ci-dessus est mise à jour avec les lieux fréquentés à la date pointé.
       
   //- about
   div(id="about",class="row")
