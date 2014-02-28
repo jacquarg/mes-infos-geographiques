@@ -36,8 +36,12 @@ div(id="content", class="container")
         //-a(href="#refreshButton",class="btn btn-primary btn-large")  Regénérer
         p 
           | La carte ci contre indique votre fréquentation géographique en se basant sur l'historique de positionnement de votre téléphone.<br>
-          | Vous pouvez vous déplacer et zoomer sur une zone pour plus de précision.<br>
-          | Le graphe de fréquentation ci-desous indique les dates et intensité de votre présence sur la zone visible de la carte.
+          | Elle permet en un clein d'oeuil de voir les lieux les plus fréquentés sans tenir compte du temps.
+        p 
+          | Plus la couleur est intense et plus vous avez fréquenté la zone coloré.<br>
+          | Vous pouvez vous déplacer et zoomer sur une zone pour plus de précision.
+        p
+          | Le graphe de fréquentation ci-dessous est mis à jour lors de vos déplacement sur la carte.
           
       div(class="span8")
         //p(class="text-info")  OpenStreetMap (Leaflet)
@@ -49,8 +53,9 @@ div(id="content", class="container")
         div(id="chartArea",class="well",style="padding:0;height:200px;cursor:pointer;position:relative;")
         //- p  Selectionner une période de la courbe pour ne voir que les lieux fréquentés pendant cette période
       div(class="span4")
-        p ce graphe indique les dates et intensité de votre présence sur la zone visible de la carte
-        p En pointant les points de ce graphe, la carte ci-dessus est mise à jour avec les lieux fréquentés à la date pointé.
+        p Ce graphe indique les dates de votre présence sur la zone visible de la carte <br/>
+        p La hauteur du graphe indique le nombre de relevé (votre temps de présence) relatif sur la zone visible de la carte <br/>
+        p En pointant les points de ce graphe, la carte est mise à jour en n'indiquant QUE les lieux fréquentés à la date pointé.
       
   //- about
   div(id="about",class="row")
@@ -62,7 +67,7 @@ div(id="content", class="container")
       p  
         | Les données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>
         | La précision des coordonnées est variable et la carte est uniquement indicative, et le fait d'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. 
-        | Cependant il indique que vous étiez pas loin. <br/>
+        | Cependant il indique que vous n'étiez vraisemblablement pas loin. <br/>
         
   //- contact
   div(id="contact",class="row")
