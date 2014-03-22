@@ -1737,10 +1737,10 @@ module.exports = MapView = Backbone.View.extend({
     	}
     },
     updateMap: function(callback){
-    	this.updateLMap(callback);
-    	//this.lheatmap.setLatLngs(this.geoLData);
+    	//this.updateLMap(callback);
+    	this.lheatmap.setLatLngs(this.geoLData);
     	if(this.gmap){
-    	  this.updateGMap(callback);
+    	  //this.updateGMap(callback);
     	}
     },
     
