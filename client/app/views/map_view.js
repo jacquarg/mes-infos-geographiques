@@ -15,7 +15,7 @@ module.exports = MapView = Backbone.View.extend({
     	// this.initGoogleMap();
 		this.initLeafletMap();
 		this.initChart();
-		this.gotoLocation(myLat,myLng);
+		// this.gotoLocation(myLat,myLng);
 		// centre la carte sur l'utilisateur.
     	var that = this;
     	navigator.geolocation.getCurrentPosition(
@@ -25,7 +25,6 @@ module.exports = MapView = Backbone.View.extend({
 	    		that.gotoLocation(that.longitude,that.latitude);
 	    	}
 		);
-		
 	},
 
 	gotoLocation: function (longitude, latitude){
@@ -183,9 +182,10 @@ module.exports = MapView = Backbone.View.extend({
     	}
     },
     updateMap: function(callback){
-    	this.lheatmap.setLatLngs(this.geoLData);
+    	this.updateLMap(callback);
+    	//this.lheatmap.setLatLngs(this.geoLData);
     	if(this.gmap){
-    	  this.gheatmap.setDataSet({data: this.geoGData, max: 5});
+    	  this.updateGMap(callback);
     	}
     },
     
@@ -200,7 +200,7 @@ module.exports = MapView = Backbone.View.extend({
 			west : bound.getWest()
 		};
     	//console.log("south,north,west,east:",queryObject.south,queryObject.north,queryObject.west,queryObject.east);
-		var that = this;
+    	var that = this;
 		this.fetchData(queryObject,function(){
 			that.lheatmap.setLatLngs(that.geoLData);
 			if(callback)
@@ -227,7 +227,9 @@ module.exports = MapView = Backbone.View.extend({
 		});
 	},
 	fetchData:function(bounds,callback){
-		var that = this;
+	  $("#modal-overlay").show();
+	  $("#loader").show();
+      var that = this;
 		$.getJSON('areaGeolocations', bounds, function(data) {
 			that.locationData = data;
 			that.geoGData = new Array();
@@ -254,6 +256,8 @@ module.exports = MapView = Backbone.View.extend({
 			});
 			console.log("nb points:",that.geoGData.length);
 //			console.log("result south,north,west,east:",south,north,west,east);
+			$("#modal-overlay").hide();
+			$("#loader").hide();
 			if(callback)
 				callback();
 		});

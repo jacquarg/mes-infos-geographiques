@@ -1502,7 +1502,7 @@ attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow |
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<div class="navbar navbar-inverse navbar-fixed-top"><div class="navbar-inner"><div class="container"><a data-toggle="collapse" data-target=".nav-collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand"> MesInfos Géographiques</a><div class="nav-collapse collapse"><ul class="nav"><li><a href="#dataviz"> Cartes</a></li><li><a href="#about"> A Propos</a></li><li><a href="#contact"> Contact</a></li></ul></div></div></div></div><div id="content" class="container"><!--div(class="hero-unit")--><h2> MesInfos Géographiques</h2><p>Cette application vous permet de naviguer visuellement dans votre historique des lieux que vous avez les plus fréquentés.<br/></p><div id="dataviz"><div class="row"><div class="span12"><h2> Carte des lieux fréquentés</h2></div><div class="span4"><p> \nLa carte ci contre indique votre fréquentation géographique en se basant sur l\'historique de positionnement de votre téléphone.<br>\nElle permet en un clein d\'oeuil de voir les lieux les plus fréquentés sans tenir compte du temps.</p><p> \nPlus la couleur est intense et plus vous avez fréquenté la zone coloré.<br>\nVous pouvez vous déplacer et zoomer sur une zone pour plus de précision.</p><p>Le graphe de fréquentation ci-dessous est mis à jour lors de vos déplacement sur la carte.</p></div><div class="span8"><!--p(class="text-info")  OpenStreetMap (Leaflet)--><div id="map" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div></div><div class="row"><div class="span12"><h2> Graphe de fréquentation</h2></div><div class="span8"><div id="chartArea" style="padding:0;height:200px;cursor:pointer;position:relative;" class="well"></div></div><div class="span4"><p>Ce graphe indique les dates de votre présence sur la zone visible de la carte <br/></p><p>La hauteur du graphe indique le nombre de relevé (votre temps de présence) relatif sur la zone visible de la carte <br/></p><p>En pointant les points de ce graphe, la carte est mise à jour en n\'indiquant QUE les lieux fréquentés à la date pointé.</p></div></div></div><div id="about" class="row"><div class="span12"><h2> A Propos</h2><p> \nL\'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>\nIl à pour objectif de permettre aux utilisateurs de visualiser la carte de ses déplacement.</p><p> \nLes données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>\nLa précision des coordonnées est variable et la carte est uniquement indicative, et le fait d\'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. \nCependant il indique que vous n\'étiez vraisemblablement pas loin. <br/></p></div></div><div id="contact" class="row"><div class="span3"><h2> Contacts</h2><p> Patrice Delorme <br/>\n@pdelorme<br/>\npdelorme@lookal.fr</p></div></div><!-- footer      --><footer><p> &copy; Patrice Delorme 2013</p></footer></div>');
+buf.push('<div id="modal-overlay"></div><div id="loader"><img src="loader.gif" alt="je charge"/></div><div class="navbar navbar-inverse navbar-fixed-top"><div class="navbar-inner"><div class="container"><a data-toggle="collapse" data-target=".nav-collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand"> MesInfos Géographiques</a><div class="nav-collapse collapse"><ul class="nav"><li><a href="#dataviz"> Cartes</a></li><li><a href="#about"> A Propos</a></li><li><a href="#contact"> Contact</a></li></ul></div></div></div></div><div id="content" class="container"><!--div(class="hero-unit")--><h2> MesInfos Géographiques</h2><p>Cette application vous permet de naviguer visuellement dans votre historique des lieux que vous avez les plus fréquentés.<br/></p><div id="dataviz"><div class="row"><div class="span12"><h2> Carte des lieux fréquentés</h2></div><div class="span4"><p> \nLa carte ci contre indique votre fréquentation géographique en se basant sur l\'historique de positionnement de votre téléphone.<br>\nElle permet en un clein d\'oeuil de voir les lieux les plus fréquentés sans tenir compte du temps.</p><p> \nPlus la couleur est intense et plus vous avez fréquenté la zone coloré.<br>\nVous pouvez vous déplacer et zoomer sur une zone pour plus de précision.</p><p>Le graphe de fréquentation ci-dessous est mis à jour lors de vos déplacement sur la carte.</p></div><div class="span8"><!--p(class="text-info")  OpenStreetMap (Leaflet)--><div id="map" style="padding:0;height:400px;cursor:pointer;position:relative;" class="well"></div></div></div><div class="row"><div class="span12"><h2> Graphe de fréquentation</h2></div><div class="span8"><div id="chartArea" style="padding:0;height:200px;cursor:pointer;position:relative;" class="well"></div></div><div class="span4"><p>Ce graphe indique les dates de votre présence sur la zone visible de la carte <br/></p><p>La hauteur du graphe indique le nombre de relevé (votre temps de présence) relatif sur la zone visible de la carte <br/></p><p>En pointant les points de ce graphe, la carte est mise à jour en n\'indiquant QUE les lieux fréquentés à la date pointé.</p></div></div></div><div id="about" class="row"><div class="span12"><h2> A Propos</h2><p> \nL\'appli MesInfos Géographique à été imaginée dans le cadre du concours mes infos organisé par la Fing.<br/>\nIl à pour objectif de permettre aux utilisateurs de visualiser la carte de ses déplacement.</p><p> \nLes données utilisées ici sont fournies par orange et sont basé sur la triangulation de votre téléphone <br/>\nLa précision des coordonnées est variable et la carte est uniquement indicative, et le fait d\'etre "vu" en un lieu ne signifie pas nécéssairement que vous y étiez. \nCependant il indique que vous n\'étiez vraisemblablement pas loin. <br/></p></div></div><div id="contact" class="row"><div class="span3"><h2> Contacts</h2><p> Patrice Delorme <br/>\n@pdelorme<br/>\npdelorme@lookal.fr</p></div></div><!-- footer      --><footer><p> &copy; Patrice Delorme 2013</p></footer></div>');
 }
 return buf.join("");
 };
@@ -1570,7 +1570,7 @@ module.exports = MapView = Backbone.View.extend({
     	// this.initGoogleMap();
 		this.initLeafletMap();
 		this.initChart();
-		this.gotoLocation(myLat,myLng);
+		// this.gotoLocation(myLat,myLng);
 		// centre la carte sur l'utilisateur.
     	var that = this;
     	navigator.geolocation.getCurrentPosition(
@@ -1580,7 +1580,6 @@ module.exports = MapView = Backbone.View.extend({
 	    		that.gotoLocation(that.longitude,that.latitude);
 	    	}
 		);
-		
 	},
 
 	gotoLocation: function (longitude, latitude){
@@ -1738,9 +1737,10 @@ module.exports = MapView = Backbone.View.extend({
     	}
     },
     updateMap: function(callback){
-    	this.lheatmap.setLatLngs(this.geoLData);
+    	this.updateLMap(callback);
+    	//this.lheatmap.setLatLngs(this.geoLData);
     	if(this.gmap){
-    	  this.gheatmap.setDataSet({data: this.geoGData, max: 5});
+    	  this.updateGMap(callback);
     	}
     },
     
@@ -1755,7 +1755,7 @@ module.exports = MapView = Backbone.View.extend({
 			west : bound.getWest()
 		};
     	//console.log("south,north,west,east:",queryObject.south,queryObject.north,queryObject.west,queryObject.east);
-		var that = this;
+    	var that = this;
 		this.fetchData(queryObject,function(){
 			that.lheatmap.setLatLngs(that.geoLData);
 			if(callback)
@@ -1782,7 +1782,9 @@ module.exports = MapView = Backbone.View.extend({
 		});
 	},
 	fetchData:function(bounds,callback){
-		var that = this;
+	  $("#modal-overlay").show();
+	  $("#loader").show();
+      var that = this;
 		$.getJSON('areaGeolocations', bounds, function(data) {
 			that.locationData = data;
 			that.geoGData = new Array();
@@ -1809,6 +1811,8 @@ module.exports = MapView = Backbone.View.extend({
 			});
 			console.log("nb points:",that.geoGData.length);
 //			console.log("result south,north,west,east:",south,north,west,east);
+			$("#modal-overlay").hide();
+			$("#loader").hide();
 			if(callback)
 				callback();
 		});
