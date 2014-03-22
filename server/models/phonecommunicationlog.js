@@ -1,15 +1,15 @@
 americano = require('americano');
 
 module.exports = PhoneCommunicationLog = americano.getModel('phonecommunicationlog', {
-	'origin': String,
+	//'origin': String,
+    //'timestamp': Date,
+    //'type':String,
+    //'direction':String,
+    //'correspondantNumber': String,
+    //'radius': Number,
     'timestamp': Date,
     'latitude': Number,
-    'longitude': Number,
-    'radius': Number,
-    'timestamp': Date,
-    'type':String,
-    'direction':String,
-    'correspondantNumber': String
+    'longitude': Number
 });
 
 PhoneCommunicationLog.all = function(callback) {

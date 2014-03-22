@@ -1,11 +1,11 @@
 americano = require('americano');
 
 module.exports = GeolocationLog = americano.getModel('geolocationlog', {
-	'origin': String,
-    'timestamp': Date,
+	//'origin': String,
+    //'timestamp': Date,
+    //'radius': Number,
     'latitude': Number,
     'longitude': Number,
-    'radius': Number,
     'timestamp': Date
 });
 

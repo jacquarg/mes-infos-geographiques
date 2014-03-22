@@ -83,11 +83,15 @@ module.exports.byArea = function(req, res) {
 	    else {
 	    	var filteredGeolocationLogData = new Array();
 	    	for(var i=0;i<geolocationLogData.length;i++){
+	    	    console.log(geolocationLogData[i]);
 	    		longitude = geolocationLogData[i].longitude;
 	    		latitude = geolocationLogData[i].latitude;
 	    		if(west < longitude && longitude < east && north > latitude && latitude > south){
 //	    			console.log("ok : lat:",latitude,"lon:",longitude);
-	    			filteredGeolocationLogData.push(geolocationLogData[i]);
+                    timestamp = geolocationLogData[i].timestamp;
+                    day = ""+timestamp.getFullYear()+"-"+timestamp.getMonth()+"-"+timestamp.getDate();
+                    console.log(timestamp,":::",day);
+                    filteredGeolocationLogData.push({lat:latitude, lng:longitude, d:day});
 	    		} else {
 //	    			console.log("rejected : lat:",latitude,"lon:",longitude);
 	    		}
@@ -103,7 +107,10 @@ module.exports.byArea = function(req, res) {
 	    	    		latitude = phoneCommunicationLogData[i].latitude;
 	    	    		if(west < longitude && longitude < east && north > latitude && latitude > south) {
 //	    	    			console.log("ok :lat :",latitude,"lon:",longitude);
-	    	    			filteredPhoneCommunicationLogData.push(phoneCommunicationLogData[i]);
+	    	    		    timestamp = phoneCommunicationLogData[i].timestamp;
+	    	    		    day = ""+timestamp.getFullYear()+"-"+timestamp.getMonth()+"-"+timestamp.getDate();
+	    	    		    console.log(timestamp,":::",day);
+	    	    			filteredPhoneCommunicationLogData.push({lat:latitude, lng:longitude, d:day});
 	    	    		} else {
 //	    	    			console.log("rejected :lat :",latitude,"lon:",longitude);
 	    	    		}
