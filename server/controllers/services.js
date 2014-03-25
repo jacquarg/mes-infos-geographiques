@@ -83,14 +83,14 @@ module.exports.byArea = function(req, res) {
 	    else {
 	    	var filteredGeolocationLogData = new Array();
 	    	for(var i=0;i<geolocationLogData.length;i++){
-	    	    console.log(geolocationLogData[i]);
+//              console.log(geolocationLogData[i]);
 	    		longitude = geolocationLogData[i].longitude;
 	    		latitude = geolocationLogData[i].latitude;
-	    		if(west < longitude && longitude < east && north > latitude && latitude > south){
+	    		if((!west || west < longitude) && (!east || longitude < east) && (!north || north > latitude) && (!south || latitude > south)){
 //	    			console.log("ok : lat:",latitude,"lon:",longitude);
                     timestamp = geolocationLogData[i].timestamp;
                     day = ""+timestamp.getFullYear()+"-"+timestamp.getMonth()+"-"+timestamp.getDate();
-                    console.log(timestamp,":::",day);
+//                  console.log(timestamp,":::",day);
                     filteredGeolocationLogData.push({lat:latitude, lng:longitude, d:day});
 	    		} else {
 //	    			console.log("rejected : lat:",latitude,"lon:",longitude);
@@ -105,11 +105,11 @@ module.exports.byArea = function(req, res) {
 	    	    	for(var i=0;i<phoneCommunicationLogData.length;i++){
 	    	    		longitude = phoneCommunicationLogData[i].longitude;
 	    	    		latitude = phoneCommunicationLogData[i].latitude;
-	    	    		if(west < longitude && longitude < east && north > latitude && latitude > south) {
+	                    if((!west || west < longitude) && (!east || longitude < east) && (!north || north > latitude) && (!south || latitude > south)){
 //	    	    			console.log("ok :lat :",latitude,"lon:",longitude);
 	    	    		    timestamp = phoneCommunicationLogData[i].timestamp;
 	    	    		    day = ""+timestamp.getFullYear()+"-"+timestamp.getMonth()+"-"+timestamp.getDate();
-	    	    		    console.log(timestamp,":::",day);
+//	    	    		    console.log(timestamp,":::",day);
 	    	    			filteredPhoneCommunicationLogData.push({lat:latitude, lng:longitude, d:day});
 	    	    		} else {
 //	    	    			console.log("rejected :lat :",latitude,"lon:",longitude);

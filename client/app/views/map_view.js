@@ -1,6 +1,5 @@
 var myLat = 43.293466;
 var myLng = 5.364575;
-var myLatlng = new google.maps.LatLng(myLat, myLng);
 
 module.exports = MapView = Backbone.View.extend({
 
@@ -12,71 +11,31 @@ module.exports = MapView = Backbone.View.extend({
     
     // initialize is automatically called once after the view is constructed
     initialize: function() {
-    	// this.initGoogleMap();
-		this.initLeafletMap();
-		this.initChart();
-		// this.gotoLocation(myLat,myLng);
-		// centre la carte sur l'utilisateur.
-    	var that = this;
-    	navigator.geolocation.getCurrentPosition(
-			function(location){
-	    		that.latitude = location.coords.latitude;
-	    		that.longitude = location.coords.longitude;
-	    		that.gotoLocation(that.longitude,that.latitude);
-	    	}
-		);
+        var that = this;
+		this.fetchData(null, function(){
+		  that.initLeafletMap();
+		  that.initChart();
+		  that.updateMap(function(){
+            that.updateChart();
+		  });
+	      navigator.geolocation.getCurrentPosition(
+	          function(location){
+	                that.latitude = location.coords.latitude;
+	                that.longitude = location.coords.longitude;
+	                that.gotoLocation(that.longitude,that.latitude);
+	          }
+	      );
+		});
 	},
 
 	gotoLocation: function (longitude, latitude){
 		if(this.lmap){
 			this.lmap.setView([latitude,longitude]);
 			var that = this;
-			this.updateLMap(function(){
-                that.updateChart(that.locationData);
-            });
-		}
-		if(this.gmap){
-			this.gmap.center = new google.maps.LatLng(latitude, longitude);
+			that.updateChart();
 		}
 	},
-	initGoogleMap: function(){
-		this.options = {
-		  zoom: 5,
-		  center: myLatlng,
-		  mapTypeId: google.maps.MapTypeId.ROADMAP,
-		  disableDefaultUI: false,
-		  scrollwheel: true,
-		  draggable: true,
-		  navigationControl: true,
-		  mapTypeControl: false,
-		  scaleControl: true,
-		  disableDoubleClickZoom: false
-		};
-		this.gmap = new google.maps.Map(this.$el.find("#googleHeatmapArea")[0], this.options);
-		
-		this.gheatmap = new HeatmapOverlay(this.gmap, {
-		    "radius":20,
-		    "visible":true, 
-		    "opacity":60
-		});
 
-
-		// this is important, because if you set the data set too early, the latlng/pixel projection doesn't work
-		var that = this;
-		google.maps.event.addListenerOnce(this.gmap, "idle", function(){
-			that.updateGMap();
-		});
-		google.maps.event.addListener(this.gmap, 'click', function(e) {
-			that.updateGMap();
-			//alert(e.latLng);
-		});
-		google.maps.event.addListener(this.gmap, 'bounds_changed', function(e) {
-			that.updateGMap(function(){
-	    		that.updateChart(that.locationData);
-	    	});
-		});
-	},
-	
 	initChart:function(){
 		// init charts
 		this.geolocationChartData = [];
@@ -126,7 +85,7 @@ module.exports = MapView = Backbone.View.extend({
 						        that.updateMap();
 						  },
 					  },
-					  {
+					  { 
 						  type: "line",
 						  color: "rgba(8,15,173,.7)",
 						  dataPoints: this.phoneCommunicationChartData,
@@ -160,33 +119,23 @@ module.exports = MapView = Backbone.View.extend({
 		this.lheatmap = L.heatLayer(dummy,options).addTo(this.lmap);
         var that = this;
         this.lmap.on("moveend", function(){
-            that.updateLMap(function() {
-                that.updateChart(that.locationData);
-            });
+          that.updateChart();
         });
 	},
 	
     render: function() {
     	var that = this;
     	this.updateMap(function(){
-    		that.updateChart(that.locationData);
+    		that.updateChart();
     	});
     },
     
     showDayLocations: function (day){
     	var dayLData = this.dayLLocations[day];
     	this.lheatmap.setLatLngs(dayLData);
-    	if(this.gmap){
-    	  var dayGData = this.dayGLocations[day];
-    	  this.gheatmap.setDataSet({max: 5, data: dayGData});
-    	}
     },
     updateMap: function(callback){
-    	//this.updateLMap(callback);
     	this.lheatmap.setLatLngs(this.geoLData);
-    	if(this.gmap){
-    	  //this.updateGMap(callback);
-    	}
     },
     
     updateLMap:function(callback){
@@ -208,54 +157,23 @@ module.exports = MapView = Backbone.View.extend({
 		});
     },
     
-    updateGMap: function (callback){
-    	var bound = this.gmap.getBounds();
-    	if(!bound)
-    		return;
-		var queryObject = {
-				north: bound.getNorthEast().lat(),
-				south: bound.getSouthWest().lat(),
-				east : bound.getNorthEast().lng(),
-				west : bound.getSouthWest().lng(),
-		};
-//		console.log("south,north,west,east:",queryObject.south,queryObject.north,queryObject.west,queryObject.east);
-		var that = this;
-		this.fetchData(queryObject,function(){
-			that.gheatmap.setDataSet({max: 5, data: that.geoGData});
-			if(callback)
-				callback();
-		});
-	},
 	fetchData:function(bounds,callback){
 	  $("#modal-overlay").show();
 	  $("#loader").show();
       var that = this;
 		$.getJSON('areaGeolocations', bounds, function(data) {
 			that.locationData = data;
-			that.geoGData = new Array();
+//			that.geoGData = new Array();
 			that.geoLData = new Array();
-//			var north = -1000;
-//			var south = 1000;
-//			var east = -1000;
-//			var west = 1000;
 			$.each(data.geolocationLogs, function(key, val) {
-				that.geoGData.push({lng:val.lng, lat:val.lat, count:1});
+//				that.geoGData.push({lng:val.lng, lat:val.lat, count:1});
 				that.geoLData.push([val.lat, val.lng, 1]);
-//				if(val.longitude<west) west = val.longitude;
-//				if(val.longitude>east) east = val.longitude;
-//				if(val.latitude>north) north = val.latitude;
-//				if(val.latitude<south) south = val.latitude;
 			});
 			$.each(data.phoneCommunicationLog, function(key, val) {
-				that.geoGData.push({lng:val.lng, lat:val.lat, count:1});
+//				that.geoGData.push({lng:val.lng, lat:val.lat, count:1});
 				that.geoLData.push([val.lat, val.lng, 1]);
-//				if(val.longitude<west) west = val.longitude;
-//				if(val.longitude>east) east = val.longitude;
-//				if(val.latitude>north) north = val.latitude;
-//				if(val.latitude<south) south = val.latitude;
 			});
-			console.log("nb points:",that.geoGData.length);
-//			console.log("result south,north,west,east:",south,north,west,east);
+			console.log("nb points:",that.geoLData.length);
 			$("#modal-overlay").hide();
 			$("#loader").hide();
 			if(callback)
@@ -263,65 +181,66 @@ module.exports = MapView = Backbone.View.extend({
 		});
 	},
 	
-	updateChart: function(data){
+	updateChart: function(){
+	  var data = this.locationData;  
+	  if(!data)
+	      return;
 		var that = this;
-		var dayAccumulator = {};
-		this.dayLLocations = {};
-		this.dayGLocations = {};
-		$.each(data.geolocationLogs, function(key, val) {
-			//var date = new Date(val.t);
-            //var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-			var dayParts = val.d.split('-');
-			var day = new Date(dayParts[0], dayParts[1], dayParts[2]);
-			if(!dayAccumulator[day]){
-				dayAccumulator[day] = 1;
-				that.dayLLocations[day] = new Array();
-				that.dayGLocations[day] = new Array();
-			} else {
-				dayAccumulator[day] = dayAccumulator[day] + 1;
-			}
-			that.dayLLocations[day].push([val.lat,val.lng]);
-			that.dayGLocations[day].push({lat:val.lat,lng:val.lng, count:1});
-		});
-		this.geolocationChartData.length = 0;
-		dayAccumulator = this.toChartData(dayAccumulator,this.geolocationChartData);
-//		$.each(dayAccumulator, function(key, val){
-//			that.geolocationChartData.push({x:new Date(key), y:val});
-//		});
-		
-		var dayAccumulator = {};
-		$.each(data.phoneCommunicationLog, function(key, val) {
-			//var date = new Date(val.t);
-			//var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-			var dayParts = val.d.split('-');
-            var day = new Date(dayParts[0], dayParts[1], dayParts[2]);
-			if(!dayAccumulator[day]){
-				dayAccumulator[day] = 1;
-				that.dayLLocations[day] = new Array();
-				that.dayGLocations[day] = new Array();
-			} else {
-				dayAccumulator[day] = dayAccumulator[day] + 1;
-			}
-			that.dayLLocations[day].push([val.lat,val.lng]);
-			that.dayGLocations[day].push({lat:val.lat,lng:val.lng, count:1});
-		});
-		
-		this.phoneCommunicationChartData.length = 0;
-		dayAccumulator = this.toChartData(dayAccumulator,this.phoneCommunicationChartData);
-//		$.each(dayAccumulator, function(key, val){
-//			that.phoneCommunicationChartData.push({x:new Date(key), y:val});
-//		});
+        var bounds = this.lmap.getBounds();
+        this.dayLLocations = {};
+		if(data.geolocationLogs) {
+	        var dayAccumulator = {};
+    		$.each(data.geolocationLogs, function(key, val) {
+    		    if(val.lng>bounds.getEast())
+    		      return;
+                if(val.lng<bounds.getWest())
+                  return;
+                if(val.lat>bounds.getNorth())
+                  return;
+                if(val.lat<bounds.getSouth())
+                  return;
+    
+    			var dayParts = val.d.split('-');
+    			var day = new Date(dayParts[0], dayParts[1], dayParts[2]);
+    			if(!dayAccumulator[day]){
+    				dayAccumulator[day] = 1;
+    				that.dayLLocations[day] = new Array();
+    			} else {
+    				dayAccumulator[day] = dayAccumulator[day] + 1;
+    			}
+    			that.dayLLocations[day].push([val.lat,val.lng]);
+    		});
+            this.geolocationChartData.length = 0;
+            dayAccumulator = this.toChartData(dayAccumulator,this.geolocationChartData);
+		}
+		if(data.phoneCommunicationLog) {
+    		var dayAccumulator = {};
+    		$.each(data.phoneCommunicationLog, function(key, val) {
+              if(val.lng>bounds.getEast())
+                return;
+              if(val.lng<bounds.getWest())
+                return;
+              if(val.lat>bounds.getNorth())
+                return;
+              if(val.lat<bounds.getSouth())
+                return;
+    			var dayParts = val.d.split('-');
+                var day = new Date(dayParts[0], dayParts[1], dayParts[2]);
+    			if(!dayAccumulator[day]){
+    				dayAccumulator[day] = 1;
+    				that.dayLLocations[day] = new Array();
+    			} else {
+    				dayAccumulator[day] = dayAccumulator[day] + 1;
+    			}
+    			that.dayLLocations[day].push([val.lat,val.lng]);
+    		});
+    		
+    		this.phoneCommunicationChartData.length = 0;
+    		dayAccumulator = this.toChartData(dayAccumulator,this.phoneCommunicationChartData);
+		}
 		this.chart.render();
 	},
         
-	placeMarker: function (position, gmap) {
-		var marker = new google.maps.Marker({
-			position: position,
-			map: gmap
-		});
-		gmap.panTo(position);
-	},
-	
 	toChartData: function (inputmap, output) {
 		output.length = 0;
 	  var keys=[];
