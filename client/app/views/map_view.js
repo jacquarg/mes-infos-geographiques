@@ -12,7 +12,11 @@ module.exports = MapView = Backbone.View.extend({
     // initialize is automatically called once after the view is constructed
     initialize: function() {
         var that = this;
+        $("#modal-overlay").show();
+        $("#loader").show();
 		this.fetchData(null, function(){
+          $("#modal-overlay").hide();
+          $("#loader").hide();
 		  that.initLeafletMap();
 		  that.initChart();
 		  that.updateMap(function(){
@@ -25,6 +29,13 @@ module.exports = MapView = Backbone.View.extend({
 	                that.gotoLocation(that.longitude,that.latitude);
 	          }
 	      );
+	      this.reloader = setInterval(function(){
+	        that.fetchData(null, function(){
+	          that.updateMap(function(){
+	            that.updateChart();
+	          });
+	        });
+	      },5*60*1000);
 		});
 	},
 
@@ -158,8 +169,6 @@ module.exports = MapView = Backbone.View.extend({
     },
     
 	fetchData:function(bounds,callback){
-	  $("#modal-overlay").show();
-	  $("#loader").show();
       var that = this;
 		$.getJSON('areaGeolocations', bounds, function(data) {
 			that.locationData = data;
@@ -174,8 +183,6 @@ module.exports = MapView = Backbone.View.extend({
 				that.geoLData.push([val.lat, val.lng, 1]);
 			});
 			console.log("nb points:",that.geoLData.length);
-			$("#modal-overlay").hide();
-			$("#loader").hide();
 			if(callback)
 				callback();
 		});
